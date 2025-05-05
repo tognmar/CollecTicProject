@@ -1,0 +1,66 @@
+x-postgres-environment: &postgres-environment
+  POSTGRES_DB:
+  POSTGRES_HOST:
+  POSTGRES_PORT:
+  POSTGRES_USER:
+  POSTGRES_PASSWORD:
+
+x-django-environment: &django-environment
+  DJANGO_DEBUG:
+  DJANGO_SECRET_KEY:
+
+x-openai-environment: &openai-environment
+  OPENAI_API_KEY:
+
+x-email-environment: &email-environment
+  EMAIL_USE_TLS:
+  EMAIL_HOST:
+  EMAIL_HOST_USER:
+  EMAIL_HOST_PASSWORD:
+  EMAIL_PORT:
+
+services:
+  backend:
+    image: registry.gitlab.propulsion-home.ch/full-stack/batch-31-feb-2025/final-project-ticket/ticket:master
+    command: "sh /scripts/prod.sh"
+    environment:
+      <<:
+        - *django-environment
+        - *postgres-environment
+        - *openai-environment
+        - *email-environment
+    volumes:
+      - static_files:/static-files
+      - media_files:/media-files
+      - frontend_build:/frontend/dist
+    depends_on:
+      - postgres
+
+
+  postgres:
+    image: postgres:latest
+    environment:
+      <<:
+        - *postgres-environment
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - static_files:/static-files
+      - media_files:/media-files
+      - ./nginx:/etc/nginx/conf.d/
+      - frontend_build:/frontend-build
+      - /etc/letsencrypt:/etc/letsencrypt
+
+
+volumes:
+  postgres_data:
+  static_files:
+  media_files:
+  frontend_build:
+

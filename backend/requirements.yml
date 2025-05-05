@@ -1,0 +1,21 @@
+name: ticket
+
+dependencies:
+  - python=3.12.5
+  - pip=25.0
+  - psycopg2=2.9.9
+  - pip:
+      - django==5.1.7
+      - djangorestframework==3.15.2
+      - djangorestframework_simplejwt==5.5.0
+      - drf-yasg==1.21.10
+      - flake8==7.1.2
+      - gunicorn==23.0.0
+      - djoser==2.3.1
+      - social-auth-app-django==5.4.3
+      - django-cors-headers==4.7.0
+      - pillow==11.1.0
+      - openai==1.71.0
+      - dotenv==0.9.9
+      - python-dateutil==2.9.0.post0
+      - pdf2image==1.17.0
